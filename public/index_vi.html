@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="http://distill.pub/template.v2.js"></script>
+  <style>
+    .subgrid {
+	grid-column: screen;
+	display: grid;
+	grid-template-columns: inherit;
+	grid-template-rows: inherit;
+	grid-column-gap: inherit;
+	grid-row-gap: inherit;
+}
+
+d-figure.base-grid {
+	grid-column: screen;
+	background: hsl(0, 0%, 97%);
+	padding: 20px 0;
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+d-figure {
+	margin-bottom: 1em;
+	position: relative;
+}
+
+d-figure > figure {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.shaded-figure {
+	background-color: hsl(0, 0%, 97%);
+	border-top: 1px solid hsla(0, 0%, 0%, 0.1);
+	border-bottom: 1px solid hsla(0, 0%, 0%, 0.1);
+	padding: 30px 0;
+}
+
+.pointer {
+	position: absolute;
+	width: 26px;
+	height: 26px;
+	top: 26px;
+	left: -48px;
+}
+
+.info-summary,
+#response-info {
+	margin: 1em 0;
+	padding: 1em;
+	/* border-radius: 0.25em; */
+}
+
+.summary {
+	margin-top: 18px;
+	margin-bottom: 18px;
+}
+
+.info-summary {
+	margin-top: 18px;
+	margin-bottom: 32px;
+}
+
+h3 .author {
+	font-weight: normal;
+	color: #555;
+	margin-left: 8px;
+}
+
+.info-summary,
+#response-info {
+	background-color: hsl(118, 50%, 97%);
+	border-left: solid hsl(119, 50%, 25%) 3px;
+	/* border-radius: 0.25em; */
+}
+
+.info {
+	background-color: hsl(54, 78%, 96%);
+	border-left: solid hsl(54, 33%, 67%) 1px;
+	padding: 1.5em;
+	color: hsla(0, 0%, 0%, 0.67);
+}
+
+.info h4 {
+	margin-top: 0;
+}
+
+.info p {
+	margin-bottom: 0;
+}
+
+.articles article {
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+	padding: 2em 0;
+	display: grid;
+	grid-template-columns: 65px 1fr;
+	grid-template-areas:
+		"icon header"
+		"icon summary"
+		"icon rebuttal";
+	grid-row-gap: 1.5em;
+}
+
+article#rebuttal {
+	grid-template-areas:
+		"icon header"
+		"icon summary";
+}
+
+.articles article .icon {
+	grid-area: icon;
+	padding-top: 0.5em;
+	content: url(images/single-page.svg);
+}
+
+.articles article header {
+	grid-area: header;
+}
+
+.articles article header h3 {
+	font-size: 22px;
+}
+
+.articles article header .authors-affiliations {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(25%, max-content));
+	font-size: 0.8rem;
+}
+
+.articles article header .authors-affiliations h3 {
+	font-size: 0.6rem;
+	font-weight: 400;
+	color: rgba(0, 0, 0, 0.5);
+	margin: 0;
+	text-transform: uppercase;
+}
+
+.articles article header .authors-affiliations a {
+	color: rgba(0, 0, 0, 0.8);
+	text-decoration: none;
+	border-bottom: none;
+}
+
+.articles article header .authors-affiliations p {
+	margin-bottom: 0;
+}
+
+.articles article .summary {
+	grid-area: summary;
+	margin: 0;
+}
+
+.articles article .continue {
+	grid-area: continue;
+	font-size: 80%;
+	font-weight: 600;
+	border-bottom: none;
+	text-transform: uppercase;
+	color: #2e6db7;
+	display: block;
+	margin-top: 0.25em;
+	letter-spacing: 0.25px;
+}
+
+.articles article .continue::before {
+	content: "→";
+	margin-right: 0.25em;
+}
+
+.articles article .info {
+	grid-area: rebuttal;
+}
+
+.articles article header h3 {
+	margin-top: 0;
+}
+
+.articles article header h3 a {
+	border-bottom: none;
+	color: #2e6db7;
+}
+
+  </style>
+</head>
+
+<body>
+  <d-front-matter>
+    <script type="text/json">
+{
+  "title": "Luồng thảo luận: Mạch diễn giải",
+  "description": "Chúng ta có thể học được điều gì nếu đầu tư mạnh vào việc đảo ngược kỹ thuật một mạng nơ-ron duy nhất?",
+  "authors": [
+    {
+      "author": "Nick Cammarata",
+      "authorURL": "http://nickcammarata.com",
+      "affiliation": "OpenAI",
+      "affiliationURL": "https://openai.com"
+    },
+    {
+      "author": "Shan Carter",
+      "authorURL": "http://shancarter.com",
+      "affiliation": "OpenAI",
+      "affiliationURL": "https://openai.com"
+    },
+    {
+      "author": "Gabriel Goh",
+      "authorURL": "http://gabgoh.github.io",
+      "affiliation": "OpenAI",
+      "affiliationURL": "https://openai.com"
+    },
+    {
+      "author": "Chris Olah",
+      "authorURL": "https://colah.github.io",
+      "affiliation": "OpenAI",
+      "affiliationURL": "https://openai.com"
+    },
+    {
+      "author": "Michael Petrov",
+      "authorURL": "https://twitter.com/mpetrov",
+      "affiliation": "OpenAI",
+      "affiliationURL": "https://openai.com"
+    },
+    {
+      "author": "Ludwig Schubert",
+      "authorURL": "https://schubert.io/",
+      "affiliation": "OpenAI",
+      "affiliationURL": "https://openai.com"
+    },
+    {
+      "author": "Chelsea Voss",
+      "authorURL": "https://csvoss.com/",
+      "affiliation": "OpenAI",
+      "affiliationURL": "https://openai.com"
+    },
+    {
+      "author": "Ben Egan",
+      "affiliation": "Mount Royal University",
+      "affiliationURL": "https://mtroyal.ca/"
+    },
+    {
+      "author": "Swee Kiat Lim",
+      "authorURL": "https://greentfrapp.github.io/",
+      "affiliation": "Stanford University",
+      "affiliationURL": "https://stanford.edu/"
+    }
+  ],
+  "katex": {
+    "delimiters": [
+      {
+        "left": "$",
+        "right": "$",
+        "display": false
+      },
+      {
+        "left": "$$",
+        "right": "$$",
+        "display": true
+      }
+    ]
+  }
+}
+</script>
+  </d-front-matter>
+
+  <d-title>
+    <h1>Luồng thảo luận: <i>Mạch diễn giải</i></h1>
+    <p style="font-size: 160%">
+      Chúng ta có thể học được điều gì nếu đầu tư mạnh vào việc đảo ngược kỹ thuật một mạng nơ-ron duy nhất?
+    </p>
+  </d-title>
+
+  <style>
+    .authors-affiliations {
+      display: none;
+    }
+  </style>
+
+  <d-article>
+    <p>
+      Trong tường thuật ban đầu về học sâu, mỗi nơ-ron xây dựng các đặc trưng ngày càng trừu tượng và có ý nghĩa hơn bằng cách kết hợp các đặc trưng ở lớp trước đó. Trong những năm gần đây, đã xuất hiện một số hoài nghi đối với quan điểm này, nhưng điều gì sẽ xảy ra nếu chúng ta thực sự xem trọng nó?
+    </p>
+    <p>
+      InceptionV1 là một mô hình thị giác kinh điển với khoảng 10.000 nơ-ron riêng biệt, một con số lớn nhưng vẫn ở quy mô mà một nỗ lực tập thể có thể tiếp cận được. Điều gì sẽ xảy ra nếu bạn đơn giản đi xuyên suốt mô hình, từng nơ-ron một, cố gắng hiểu từng nơ-ron và các kết nối giữa chúng? Dự án hợp tác Circuits nhằm tìm ra câu trả lời.
+    </p>
+
+```
+<p></p>
+
+<h2>Bài viết & Bình luận</h2>
+
+<p>
+  Đơn vị xuất bản tự nhiên để nghiên cứu các mạch diễn giải dường như là những bài báo ngắn về từng mạch riêng lẻ hoặc các họ đặc trưng nhỏ. So với các bài báo học máy thông thường, đây là một chủ đề nhỏ và không thông thường cho một bài báo.
+</p>
+
+<p>
+  Để tạo điều kiện cho việc khám phá hướng nghiên cứu này, Distill đang mời gọi một “luồng thảo luận” gồm các bài viết ngắn về mạch diễn giải, xen kẽ với các bình luận phản biện từ các chuyên gia trong những lĩnh vực lân cận. Luồng thảo luận này sẽ là một tài liệu sống, với các bài viết mới được bổ sung theo thời gian, được điều phối thông qua một kênh Slack mở (#circuits trên
+  <a href="http://slack.distill.pub">Slack của Distill</a>). Nội dung trong luồng thảo luận này nên được xem là nghiên cứu khám phá ở giai đoạn đầu.
+</p>
+
+<p>Các bài viết và bình luận được trình bày dưới đây theo thứ tự thời gian:</p>
+
+<div id="commentaries" class="articles">
+  <article id="article-1">
+    <div class="icon"></div>
+    <header>
+      <h3>
+        <a href="zoom-in/">Phóng To: Giới Thiệu về Circuits</a>
+      </h3>
+      <div class="authors-affiliations grid">
+        <h3>Tác giả</h3>
+        <h3>Đơn vị</h3>
+        <p class="author" style="line-height: 1.5; margin-top: 4px">
+          <a class="name" href="https://colah.github.io/">Chris Olah</a>,
+          <a class="name" href="http://nickcammarata.com/">Nick Cammarata</a
+          >,
+          <a class="name" href="https://schubert.io/">Ludwig Schubert</a>,
+          <a class="name" href="http://gabgoh.github.io/">Gabriel Goh</a>,
+          <a class="name" href="https://twitter.com/mpetrov"
+            >Michael Petrov</a
+          >,
+          <a class="name" href="http://shancarter.com/">Shan Carter</a>
+        </p>
+        <p class="affiliation">
+          <a class="affiliation" href="https://openai.com/">OpenAI</a>
+        </p>
+      </div>
+    </header>
+    <p class="summary">
+      <!--<span style="display:block; ---grid-column-start: text-end; ---grid-column-end: screen-end; ">
+                  <img src="images/thumbnail-1.jpg" style="width:80%; margin-top: 10px; margin-bottom: 30px;" />
+                </span>-->
+      Liệu việc xem các nơ-ron riêng lẻ và các kết nối giữa chúng như một đối tượng nghiên cứu nghiêm túc có hợp lý không? Bài luận này đề xuất ba khẳng định mà nếu đúng, có thể biện minh cho việc nghiên cứu nghiêm túc chúng: sự tồn tại của các đặc trưng có ý nghĩa, sự tồn tại của các mạch có ý nghĩa giữa các đặc trưng, và tính phổ quát của các đặc trưng và mạch đó.
+      <br /><br />
+      Bài viết cũng thảo luận về những thành công lịch sử của khoa học khi “phóng to”, liệu chúng ta có nên lo ngại rằng nghiên cứu này mang tính định tính hay không, và các phương pháp để điều tra một cách nghiêm ngặt.
+      <br /><br />
+      <a class="continue" href="zoom-in/">Đọc Toàn Bộ Bài Viết</a>
+    </p>
+  </article>
+
+  <article id="article-2">
+    <div class="icon"></div>
+    <header>
+      <h3>
+        <a href="early-vision/"
+          >Tổng Quan về Thị Giác Giai Đoạn Đầu trong InceptionV1</a
+        >
+      </h3>
+      <div class="authors-affiliations grid">
+        <h3>Tác giả</h3>
+        <h3>Đơn vị</h3>
+        <p class="author" style="line-height: 1.5; margin-top: 4px">
+          <a class="name" href="https://colah.github.io/">Chris Olah</a>,
+          <a class="name" href="http://nickcammarata.com/">Nick Cammarata</a
+          >,
+          <a class="name" href="https://schubert.io/">Ludwig Schubert</a>,
+          <a class="name" href="http://gabgoh.github.io/">Gabriel Goh</a>,
+          <a class="name" href="https://twitter.com/mpetrov"
+            >Michael Petrov</a
+          >,
+          <a class="name" href="http://shancarter.com/">Shan Carter</a>
+        </p>
+        <p class="affiliation">
+          <a class="affiliation" href="https://openai.com/">OpenAI</a>
+        </p>
+      </div>
+    </header>
+    <p class="summary">
+      Tổng quan về tất cả các nơ-ron trong năm lớp đầu tiên của InceptionV1, được tổ chức thành một hệ phân loại các “nhóm nơ-ron”. Bài viết này đặt nền tảng cho những nghiên cứu chuyên sâu trong tương lai về các khía cạnh cụ thể của thị giác giai đoạn đầu.
+      <br /><br />
+      <a class="continue" href="early-vision/"> Đọc Toàn Bộ Bài Viết </a>
+    </p>
+  </article>
+
+  <article id="article-3">
+    <div class="icon"></div>
+    <header>
+      <h3>
+        <a href="curve-detectors/">Bộ Phát Hiện Đường Cong</a>
+      </h3>
+      <div class="authors-affiliations grid">
+        <h3>Tác giả</h3>
+        <h3>Đơn vị</h3>
+        <p class="author" style="line-height: 1.5; margin-top: 4px">
+          <a class="name" href="http://nickcammarata.com/">Nick Cammarata</a
+          >,
+          <a class="name" href="http://gabgoh.github.io/">Gabriel Goh</a>,
+          <a class="name" href="http://shancarter.com/">Shan Carter</a>,
+          <a class="name" href="https://schubert.io/">Ludwig Schubert</a>,
+          <a class="name" href="https://twitter.com/mpetrov"
+            >Michael Petrov</a
+          >,
+          <a class="name" href="https://colah.github.io/">Chris Olah</a>
+        </p>
+        <p class="affiliation">
+          <a class="affiliation" href="https://openai.com/">OpenAI</a>
+        </p>
+      </div>
+    </header>
+    <p class="summary">
+      <!--<span style="display:block; ---grid-column-start: text-end; ---grid-column-end: screen-end; ">
+                  <img src="images/thumbnail-1.jpg" style="width:80%; margin-top: 10px; margin-bottom: 30px;" />
+                </span>-->
+
+      Mọi mô hình thị giác mà chúng tôi đã khám phá chi tiết đều chứa các nơ-ron phát hiện đường cong. Bộ Phát Hiện Đường Cong là bài đầu tiên trong loạt ba bài viết khám phá chi tiết họ nơ-ron này.
+      <br /><br />
+      <a class="continue" href="curve-detectors/">Đọc Toàn Bộ Bài Viết</a>
+    </p>
+  </article>
+
+  <article id="article-4">
+    <div class="icon"></div>
+    <header>
+      <h3>
+        <a href="equivariance/"
+          >Tính Đồng Biến Xuất Hiện Tự Nhiên trong Mạng Nơ-ron</a
+        >
+      </h3>
+      <div class="authors-affiliations grid">
+        <h3>Tác giả</h3>
+        <h3>Đơn vị</h3>
+        <p class="author" style="line-height: 1.5; margin-top: 4px">
+          <a class="name" href="https://colah.github.io/">Chris Olah</a>,
+          <a class="name" href="http://nickcammarata.com/">Nick Cammarata</a
+          >, <a class="name" href="https://csvoss.com/">Chelsea Voss</a>,
+          <a class="name" href="https://schubert.io/">Ludwig Schubert</a>,
+          <a class="name" href="http://gabgoh.github.io/">Gabriel Goh</a>
+        </p>
+        <p class="affiliation">
+          <a class="affiliation" href="https://openai.com/">OpenAI</a>
+        </p>
+      </div>
+    </header>
+    <p class="summary">
+      <!--<span style="display:block; ---grid-column-start: text-end; ---grid-column-end: screen-end; ">
+                  <img src="images/thumbnail-1.jpg" style="width:80%; margin-top: 10px; margin-bottom: 30px;" />
+                </span>-->
+
+      Mạng nơ-ron tự nhiên học được nhiều bản sao đã được biến đổi của cùng một đặc trưng, được kết nối bởi các trọng số đối xứng.
+      <br /><br />
+      <a class="continue" href="equivariance/">Đọc Toàn Bộ Bài Viết</a>
+    </p>
+  </article>
+
+  <article id="article-5">
+    <div class="icon"></div>
+    <header>
+      <h3>
+        <a href="frequency-edges/">Bộ Phát Hiện Tần Số Cao-Thấp</a>
+      </h3>
+      <div class="authors-affiliations grid">
+        <h3>Tác giả</h3>
+        <h3>Đơn vị</h3>
+        <p class="author" style="line-height: 1.5; margin-top: 4px">
+          <a class="name" href="https://schubert.io/">Ludwig Schubert</a>,
+          <a class="name" href="https://csvoss.com/">Chelsea Voss</a>,
+          <a class="name" href="http://nickcammarata.com/">Nick Cammarata</a
+          >,
+          <a class="name" href="http://gabgoh.github.io/">Gabriel Goh</a>,
+          <a class="name" href="https://colah.github.io/">Chris Olah</a>
+        </p>
+        <p class="affiliation">
+          <a class="affiliation" href="https://openai.com/">OpenAI</a>
+        </p>
+      </div>
+    </header>
+    <p class="summary">
+      Một họ nơ-ron thị giác giai đoạn đầu phản ứng với các chuyển tiếp có hướng từ tần số không gian cao sang thấp.
+      <br /><br />
+      <a class="continue" href="frequency-edges/">Đọc Toàn Bộ Bài Viết</a>
+    </p>
+  </article>
+
+  <article id="article-6">
+    <div class="icon"></div>
+    <header>
+      <h3>
+        <a href="curve-circuits/">Mạch Đường Cong</a>
+      </h3>
+      <div class="authors-affiliations grid">
+        <h3>Tác giả</h3>
+        <h3>Đơn vị</h3>
+        <p class="author" style="line-height: 1.5; margin-top: 4px">
+          <a class="name" href="http://nickcammarata.com/">Nick Cammarata</a
+          >,
+          <a class="name" href="http://gabgoh.github.io/">Gabriel Goh</a>,
+          <a class="name" href="http://shancarter.com/">Shan Carter</a>,
+          <a class="name" href="https://csvoss.com/">Chelsea Voss</a>,
+          <a class="name" href="https://schubert.io/">Ludwig Schubert</a>,
+          <a class="name" href="https://colah.github.io/">Chris Olah</a>
+        </p>
+        <p class="affiliation">
+          <a class="affiliation" href="https://openai.com/">OpenAI</a>
+        </p>
+      </div>
+    </header>
+    <p class="summary">
+      Chúng tôi đảo ngược kỹ thuật một thuật toán đã được học có độ phức tạp đáng kể từ các trọng số của một mạng nơ-ron và sử dụng các ý tưởng cốt lõi của nó để xây dựng từ đầu một mạng nơ-ron nhân tạo tái hiện lại thuật toán đó.
+      <br /><br />
+      <a class="continue" href="curve-circuits/">Đọc Toàn Bộ Bài Viết</a>
+    </p>
+  </article>
+
+  <article id="article-7">
+    <div class="icon"></div>
+    <header>
+      <h3>
+        <a href="visualizing-weights/">Trực Quan Hóa Trọng Số</a>
+      </h3>
+      <div class="authors-affiliations grid">
+        <h3>Tác giả</h3>
+        <h3>Đơn vị</h3>
+        <p class="author" style="line-height: 1.5; margin-top: 4px">
+          <a class="name" href="https://csvoss.com">Chelsea Voss</a>,
+          <a class="name" href="http://nickcammarata.com">Nick Cammarata</a
+          >,
+          <a class="name" href="https://gabgoh.github.io">Gabriel Goh</a>,
+          <a class="name" href="https://twitter.com/mpetrov"
+            >Michael Petrov</a
+          >,
+          <a class="name" href="https://schubert.io/">Ludwig Schubert</a>,
+          Ben Egan,
+          <a class="name" href="https://greentfrapp.github.io/"
+            >Swee Kiat Lim</a
+          >,
+          <a class="name" href="https://colah.github.io/">Chris Olah</a>
+        </p>
+        <p class="affiliation">
+          <a class="affiliation" href="https://openai.com/">OpenAI</a>,
+          <a class="affiliation" href="https://mtroyal.ca"
+            >Đại học Mount Royal</a
+          >,
+          <a class="affiliation" href="https://stanford.edu"
+            >Đại học Stanford</a
+          >
+        </p>
+      </div>
+    </header>
+    <p class="summary">
+      Chúng tôi trình bày các kỹ thuật để trực quan hóa, đặt vào ngữ cảnh và hiểu các trọng số của mạng nơ-ron.
+      <br /><br />
+      <a class="continue" href="visualizing-weights/">Đọc Toàn Bộ Bài Viết</a>
+    </p>
+  </article>
+
+  <article id="article-8">
+    <div class="icon"></div>
+    <header>
+      <h3>
+        <a href="branch-specialization/">Chuyên Môn Hóa Theo Nhánh</a>
+      </h3>
+      <div class="authors-affiliations grid">
+        <h3>Tác giả</h3>
+        <h3>Đơn vị</h3>
+        <p class="author" style="line-height: 1.5; margin-top: 4px">
+          <a class="name" href="https://csvoss.com">Chelsea Voss</a>,
+          <a class="name" href="https://gabgoh.github.io">Gabriel Goh</a>,
+          <a class="name" href="http://nickcammarata.com">Nick Cammarata</a
+          >,
+          <a class="name" href="https://twitter.com/mpetrov"
+            >Michael Petrov</a
+          >,
+          <a class="name" href="https://schubert.io/">Ludwig Schubert</a>,
+          <a class="name" href="https://colah.github.io/">Chris Olah</a>
+        </p>
+        <p class="affiliation">
+          <a class="affiliation" href="https://openai.com/">OpenAI</a>
+        </p>
+      </div>
+    </header>
+    <p class="summary">
+      Khi một lớp mạng nơ-ron được chia thành nhiều nhánh, các nơ-ron tự tổ chức thành những nhóm nhất quán.
+      <br /><br />
+      <a class="continue" href="branch-specialization/"
+        >Đọc Toàn Bộ Bài Viết</a
+      >
+    </p>
+  </article>
+
+  <article id="article-9">
+    <div class="icon"></div>
+    <header>
+      <h3>
+        <a href="weight-banding/">Phân Dải Trọng Số</a>
+      </h3>
+      <div class="authors-affiliations grid">
+        <h3>Tác giả</h3>
+        <h3>Đơn vị</h3>
+        <p class="author" style="line-height: 1.5; margin-top: 4px">
+          <a class="name" href="https://twitter.com/mpetrov"
+            >Michael Petrov</a
+          >,
+          <a class="name" href="https://csvoss.com">Chelsea Voss</a>,
+          <a class="name" href="https://schubert.io/">Ludwig Schubert</a>,
+          <a class="name" href="http://nickcammarata.com">Nick Cammarata</a
+          >,
+          <a class="name" href="https://gabgoh.github.io">Gabriel Goh</a>,
+          <a class="name" href="https://colah.github.io/">Chris Olah</a>
+        </p>
+        <p class="affiliation">
+          <a class="affiliation" href="https://openai.com/">OpenAI</a>
+        </p>
+      </div>
+    </header>
+    <p class="summary">
+      Các trọng số ở lớp cuối của những mô hình thị giác phổ biến xuất hiện dưới dạng các dải ngang. Chúng tôi điều tra cách thức và nguyên nhân của hiện tượng này.
+      <br /><br />
+      <a class="continue" href="weight-banding/"
+        >Đọc Toàn Bộ Bài Viết</a
+      >
+    </p>
+  </article>
+</div>
+
+<div class="info">
+  <h4>Đây là một tài liệu sống</h4>
+  <p>
+    Hãy kỳ vọng sẽ có thêm nhiều bài viết về chủ đề này, cùng với các bình luận phản biện từ các chuyên gia.
+  </p>
+</div>
+
+<h2>Tham Gia</h2>
+
+<p>
+  Luồng thảo luận Circuits mở cho các bài viết khám phá các đặc trưng riêng lẻ, các mạch và cách tổ chức của chúng trong mạng nơ-ron. Các bình luận phản biện và thảo luận về những bài viết hiện có cũng được hoan nghênh. Luồng thảo luận được tổ chức thông qua kênh <code>#circuits</code> mở trên
+  <a href="http://slack.distill.pub">Slack của Distill</a>. Các bài viết có thể được đề xuất tại đó và sẽ được đưa vào theo quyết định của các tác giả trước đó trong luồng thảo luận, hoặc trong trường hợp bất đồng, bởi một biên tập viên không liên quan.
+</p>
+
+<p>
+  Nếu bạn muốn tham gia nhưng không biết bắt đầu từ đâu, có thể sẽ có những dự án nhỏ dành cho bạn nếu bạn hỏi trong kênh.
+</p>
+
+<h2>Về Định Dạng Luồng Thảo Luận</h2>
+
+<p>
+  Một phần trong sứ mệnh của Distill là thử nghiệm các hình thức xuất bản khoa học mới. Chúng tôi tin rằng việc dung hòa các phương thức xuất bản nhanh hơn và liên tục hơn với quá trình phản biện và thảo luận là một vấn đề mở quan trọng trong xuất bản khoa học.
+</p>
+<p>
+  Các luồng thảo luận là tập hợp các bài viết ngắn, thí nghiệm và bình luận phản biện xoay quanh một chủ đề nghiên cứu hẹp hoặc không thông thường, cùng với một kênh Slack để thảo luận và cộng tác theo thời gian thực. Chúng được định vị ở giai đoạn sớm hơn so với một bài báo Distill hoàn chỉnh và cho phép việc xuất bản, phản hồi và thảo luận linh hoạt hơn. Chúng tôi cũng hy vọng chúng sẽ cho phép sự tham gia rộng rãi hơn. Hãy hình dung chúng như sự giao thoa giữa một chuỗi bài đăng trên Twitter, một hội thảo học thuật và một tuyển tập các bài luận.
+</p>
+<p>
+  Các luồng thảo luận thực sự là một thử nghiệm. Chúng tôi cho rằng có thể đây là một định dạng tuyệt vời, nhưng cũng có thể là một định dạng tệ hại. Chúng tôi dự định thử nghiệm hai luồng thảo luận như vậy rồi sau đó đánh giá lại quan điểm của mình về định dạng này.
+</p>
+```
+
+  </d-article>
+
+  <d-appendix>
+    <h3>Thông Tin Trích Dẫn</h3>
+    <p>
+      Nếu bạn muốn trích dẫn toàn bộ luồng thảo luận này, thông tin trích dẫn có thể được tìm thấy bên dưới. Thứ tự tác giả bao gồm tất cả những người tham gia vào luồng thảo luận theo thứ tự bảng chữ cái. Vì đây là một tài liệu sống, trích dẫn có thể được bổ sung thêm tác giả khi nó tiếp tục phát triển. Bạn cũng có thể trích dẫn các bài viết riêng lẻ bằng cách sử dụng thông tin trích dẫn được cung cấp ở cuối bài viết tương ứng.
+    </p>
+
+```
+<d-footnote-list></d-footnote-list>
+<d-citation-list></d-citation-list>
+```
+
+  </d-appendix>
+
+  <d-bibliography src="bibliography.bib"></d-bibliography>
+<script type="text/javascript" src="index.bundle.js"></script></body>
